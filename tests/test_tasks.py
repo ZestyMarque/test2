@@ -34,14 +34,14 @@ client = TestClient(app)
 
 def test_create_task():
     resp = client.post("/tasks/", json={
-        "title": "My first test task",
-        "description": "task from integration test"
+        "title": "First test task",
+        "description": "task from test"
     })
 
     assert resp.status_code == 200
 
     data = resp.json()
-    assert data["title"] == "My first test task"
+    assert data["title"] == "First test task"
     assert data["completed"] == False
 
 
