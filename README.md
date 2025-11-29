@@ -13,55 +13,49 @@
 
 Файл tests/test_tasks.py содержит следующие тесты:
 ```
-# Тест на создание новой задачи через API и проверку сохранения
 def test_create_task():
-    response = client.post(
-        "/tasks/",
-        json={"title": "Test Task", "description": "Test Description"}
-    )
+    resp = client.post("/tasks/", json={
+        "title": "First test task",
+        "description": "task from test"
+    })
 
-    assert response.status_code == 200
+    assert resp.status_code == 200
 
-    data = response.json()
-    assert data["title"] == "Test Task"
-    assert data["completed"] is False
+    data = resp.json()
+    assert data["title"] == "First test task"
+    assert data["completed"] == False
 
 
-# Тест на получение списка всех задач
 def test_get_tasks():
-    response = client.get("/tasks/")
+    resp = client.get("/tasks/")
+    assert resp.status_code == 200
 
-    assert response.status_code == 200
-
-    assert isinstance(response.json(), list)
-
-
-# Тест на получение одной конкретной задачи по её идентификатору
-def test_get_single_task():
-    response = client.get("/tasks/1")
-
-    assert response.status_code == 200
-
-    assert response.json()["id"] == 1
+    tasks = resp.json()
+    assert type(tasks) == list
 
 
-# Тест на завершение задачи
-def test_complete_task():
-    response = client.put("/tasks/1")
+def test_get_one_task():
+    resp = client.get("/tasks/1")
+    assert resp.status_code == 200
 
-    assert response.status_code == 200
+    task = resp.json()
+    assert task["id"] == 1
 
-    assert response.json()["completed"] is True
+
+def test_finish_task():
+    resp = client.put("/tasks/1")
+    assert resp.status_code == 200
+
+    task = resp.json()
+    assert task["completed"] == True
 
 
-# Тест на удаление задачи
-def test_delete_task():
-    response = client.delete("/tasks/1")
+def test_remove_task():
+    resp = client.delete("/tasks/1")
+    assert resp.status_code == 200
 
-    assert response.status_code == 200
-
-    assert response.json()["message"] == "Task deleted"
-
+    result = resp.json()
+    assert result["message"] == "Task deleted"
 ```
 
 # Результаты тестов и выводы
